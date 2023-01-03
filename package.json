@@ -1,0 +1,30 @@
+{
+  "name": "lisk-network-checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist | ./node_modules/.bin/tsc --build",
+    "app": "node --experimental-modules --es-module-specifier-resolution=node ./dist/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lisknonanika/lisk-network-checker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lisknonanika/lisk-network-checker/issues"
+  },
+  "homepage": "https://github.com/lisknonanika/lisk-network-checker#readme",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "node-fetch": "^2.6.7",
+    "ping": "^0.4.2",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.2",
+    "@types/ping": "^0.4.1"
+  }
+}
