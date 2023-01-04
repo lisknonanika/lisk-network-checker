@@ -1,9 +1,12 @@
 {
+    "EXP": {
+        "port": 3939
+    },
     "PING": {
-        "OPTION": {
-            "timeout": 5
+        "option": {
+            "timeout": 3
         },
-        "HOSTS": [
+        "hosts": [
             "lisk.com",
             "service.lisk.com",
             "mainnet-service.lisk.com",
@@ -11,14 +14,14 @@
         ]
     },
     "FETCH": {
-        "TIMEOUT": 5000,
-        "URL": [
+        "timeout": 5000,
+        "url": [
             "https://service.lisk.com/api/status",
-            "https://service.lisk.com/api/v2/transactions?limit=1",
+            "https://service.lisk.com/api/v2/blocks?limit=1",
             "https://mainnet-service.lisk.com/api/status",
-            "https://mainnet-service.lisk.com/api/v2/transactions?limit=1",
+            "https://mainnet-service.lisk.com/api/v2/blocks?limit=1",
             "https://testnet-service.lisk.com/api/status",
-            "https://testnet-service.lisk.com/api/v2/transactions?limit=1"
+            "https://testnet-service.lisk.com/api/v2/blocks?limit=1"
         ]
     }
 }
