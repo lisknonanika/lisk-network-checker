@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist | ./node_modules/.bin/tsc --build",
+    "build": "rm -rf ./dist | ./node_modules/.bin/tsc --build",
     "build-win": "rmdir /s /q .\\dist | .\\node_modules\\.bin\\tsc --build",
     "app": "node --experimental-modules --es-module-specifier-resolution=node ./dist/app.js",
     "api": "node --experimental-modules --es-module-specifier-resolution=node ./dist/api.js",
