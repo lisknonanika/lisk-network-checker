@@ -9,14 +9,12 @@ export const getMysqlConnection = async (): Promise<mysql.Connection> => {
 }
 
 export const getPingHistory = async (connection: mysql.Connection, host: string): Promise<mysql.RowDataPacket[] | undefined> => {
-    connection = await getMysqlConnection();
     const query: string = "SELECT * FROM `pinghistory` WHERE `host` = ? ORDER BY `host`, `timestamp` DESC LIMIT ?";
     const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [host, DB.limit]);
     return rows.length > 0 ? rows : undefined;
 }
 
 export const getFetchHistory = async (connection: mysql.Connection, url: string): Promise<mysql.RowDataPacket[] | undefined> => {
-    connection = await getMysqlConnection();
     const query: string = "SELECT * FROM `fetchhistory` WHERE `url` = ? ORDER BY `url`, `timestamp` DESC LIMIT ?";
     const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [url, DB.limit]);
     return rows.length > 0 ? rows : undefined;
