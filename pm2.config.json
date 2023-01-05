@@ -1,0 +1,10 @@
+[
+    {
+        "name": "lnc-api",
+        "script": "./dist/api.js"
+    },
+    {
+        "name": "lnc-cron",
+        "script": "./dist/cron.js"
+    }
+]

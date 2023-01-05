@@ -2,6 +2,18 @@
     "EXP": {
         "port": 3939
     },
+    "CRON": {
+        "timing": "0 */5 * * * *"
+    },
+    "DB": {
+        "params": {
+            "host": "localhost",
+            "user": "root",
+            "password": "password",
+            "database": "lnc"
+        },
+        "limit": 10
+    },
     "PING": {
         "option": {
             "timeout": 3

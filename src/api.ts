@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-
-import { RunPing, RunFetch, PingHistory, FetchHistory, PING_DATA, FETCH_DATA } from './app';
+import { RunPing, RunFetch } from './app';
+import { getMysqlConnection, getPingHistory, getFetchHistory } from './history';
+import { PING_ITEM, FETCH_ITEM } from './type';
 import { EXP as EXP_CONFIG, PING as PING_CONFIG, FETCH as FETCH_CONFIG } from './config.json';
 
 const port = EXP_CONFIG.port;
@@ -9,28 +10,49 @@ const exp = express();
 exp.use(cors({ origin: true, credentials: true }));
 
 exp.get('/', async (_req, _res) => {
-    const resultPing = await RunPing(false);
-    const resultFetch = await RunFetch(false);
-    _res.json({ ping: resultPing, fetch: resultFetch });
+    let connection = undefined;
+    try {
+        connection = await getMysqlConnection();
+        const resultPing = await RunPing(connection);
+        const resultFetch = await RunFetch(connection);
+        _res.json({ ping: resultPing, fetch: resultFetch });
+    } catch (err) {
+        console.log(err);
+    } finally {
+        if (connection) await connection.end();
+    }
 });
 
 exp.get('/history', async (_req, _res) => {
-    const resultPing: any[] = [];
-    for (let host of PING_CONFIG.hosts) {
-        const historyData: { host: string, data: PING_DATA[] } = { host: host, data: [] };
-        const histories = PingHistory.reverse().filter(data => data.host === host);
-        for (let history of histories) historyData.data.push(history.data);
-        resultPing.push(historyData);
-    }
+    let connection = undefined;
+    try {
+        connection = await getMysqlConnection();
 
-    const resultFetch: any[] = [];
-    for (let url of FETCH_CONFIG.url) {
-        const historyData: { url: string, data: FETCH_DATA[] } = { url: url, data: [] };
-        const histories = FetchHistory.reverse().filter(data => data.url === url);
-        for (let history of histories) historyData.data.push(history.data);
-        resultFetch.push(historyData);
+        const pingData: any = [];
+        for (let host of PING_CONFIG.hosts) {
+            const pingHistory = await getPingHistory(connection, host);
+            if (pingHistory === undefined) continue;
+            const pingItem: PING_ITEM = { host: host, data: [] };
+            const datas = pingHistory.filter(data => data.host === host);
+            for (let data of datas) pingItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp });
+            pingData.push(pingItem);
+        }
+
+        const fetchData: any = [];
+        for (let url of FETCH_CONFIG.url) {
+            const fetchHistory = await getFetchHistory(connection, url);
+            if (fetchHistory === undefined) continue;
+            const fetchItem: FETCH_ITEM = { url: url, data: [] };
+            const datas = fetchHistory.filter(data => data.url === url);
+            for (let data of datas) fetchItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp });
+            fetchData.push(fetchItem);
+        }
+        _res.json({ ping: pingData, fetch: fetchData });
+    } catch (err) {
+        console.log(err);
+    } finally {
+        if (connection) await connection.end();
     }
-    _res.json({ ping: resultPing, fetch: resultFetch });
 });
 
 exp.listen(port, () => {
