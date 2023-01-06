@@ -27,7 +27,7 @@ exp.get('/history', async (_req, _res) => {
     let connection = undefined;
     try {
         connection = await getMysqlConnection();
-        const limit: number = _req.query.limit && Number.isInteger(_req.query.limit) ? +_req.query.limit : 0;
+        const limit: number = _req.query.limit && Number.isInteger(+_req.query.limit) ? +_req.query.limit : 0;
         const pingData: any = [];
         for (let host of PING_CONFIG.hosts) {
             const pingHistory = await getPingHistory(connection, host, limit);
