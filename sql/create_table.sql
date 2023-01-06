@@ -4,12 +4,14 @@ CREATE TABLE lnc.pinghistory (
   host varchar(100) NOT NULL,
   alive boolean,
   timestamp timestamp,
-  responsetime long
+  responsetime long,
+  downtime long
 );
 
 CREATE TABLE lnc.fetchhistory (
   url varchar(100) NOT NULL,
   alive boolean,
   timestamp timestamp,
-  responsetime long
+  responsetime long,
+  downtime long
 );

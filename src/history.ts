@@ -8,15 +8,17 @@ export const getMysqlConnection = async (): Promise<mysql.Connection> => {
     return connection;
 }
 
-export const getPingHistory = async (connection: mysql.Connection, host: string): Promise<mysql.RowDataPacket[] | undefined> => {
+export const getPingHistory = async (connection: mysql.Connection, host: string, limit: number): Promise<mysql.RowDataPacket[] | undefined> => {
+    if (limit <= 0 || limit > 100) limit = DB.limit;
     const query: string = "SELECT * FROM `pinghistory` WHERE `host` = ? ORDER BY `host`, `timestamp` DESC LIMIT ?";
-    const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [host, DB.limit]);
+    const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [host, limit]);
     return rows.length > 0 ? rows : undefined;
 }
 
-export const getFetchHistory = async (connection: mysql.Connection, url: string): Promise<mysql.RowDataPacket[] | undefined> => {
+export const getFetchHistory = async (connection: mysql.Connection, url: string, limit: number): Promise<mysql.RowDataPacket[] | undefined> => {
+    if (limit <= 0 || limit > 100) limit = DB.limit;
     const query: string = "SELECT * FROM `fetchhistory` WHERE `url` = ? ORDER BY `url`, `timestamp` DESC LIMIT ?";
-    const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [url, DB.limit]);
+    const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(query, [url, limit]);
     return rows.length > 0 ? rows : undefined;
 }
 
@@ -35,10 +37,14 @@ export const getLatestFetchHistory = async (connection: mysql.Connection, url: s
 export const setPingHistory = async (connection: mysql.Connection, pingResults: PING_RESULT[]) => {
     for (let result of pingResults) {
         try {
-            // const pingHistory = await getLatestPingHistory(connection, result.host);
-            // if (pingHistory && (pingHistory.alive === 0 ? false : true) === result.alive) continue;
             const query: string = "INSERT INTO `pinghistory` SET ?";
-            const pingData: PING_HISTORY = { host: result.host, alive: result.alive, timestamp: result.checkDate, responseTime: result.responseTime };
+            const pingData: PING_HISTORY = {
+                host: result.host,
+                alive: result.alive,
+                timestamp: result.checkDate,
+                responsetime: result.responseTime,
+                downtime: result.downTime
+            };
             await connection.query(query, [pingData]);
             await connection.commit();
         } catch (_err) {
@@ -50,10 +56,14 @@ export const setPingHistory = async (connection: mysql.Connection, pingResults: 
 export const setFetchHistory = async (connection: mysql.Connection, fetchResult: FETCH_RESULT[]) => {
     for (let result of fetchResult) {
         try {
-            // const fetchHistory = await getLatestFetchHistory(connection, result.url);
-            // if (fetchHistory && (fetchHistory.alive === 0 ? false : true) === result.alive) continue;
             const query: string = "INSERT INTO `fetchhistory` SET ?";
-            const pingData: FETCH_HISTORY = { url: result.url, alive: result.alive, timestamp: result.checkDate, responseTime: result.responseTime };
+            const pingData: FETCH_HISTORY = {
+                url: result.url,
+                alive: result.alive,
+                timestamp: result.checkDate,
+                responsetime: result.responseTime,
+                downtime: result.downTime
+            };
             await connection.query(query, [pingData]);
             await connection.commit();
         } catch (_err) {
@@ -62,16 +72,16 @@ export const setFetchHistory = async (connection: mysql.Connection, fetchResult:
     }
 }
 
-export const getPingDownTime = async (connection: mysql.Connection, host: string, alive: boolean): Promise<number> => {
+export const getPingDownTime = async (connection: mysql.Connection, host: string, alive: boolean, checkDate: Date): Promise<number> => {
     const findData = await getLatestPingHistory(connection, host);
     if (findData === undefined || findData.alive || alive) return 0;
-    return getTime(new Date(), findData.timestamp);
+    return getTime(checkDate, findData.timestamp) + findData.downtime;
 }
 
-export const getFetchDownTime = async (connection: mysql.Connection, url: string, alive: boolean): Promise<number> => {
+export const getFetchDownTime = async (connection: mysql.Connection, url: string, alive: boolean, checkDate: Date): Promise<number> => {
     const findData = await getLatestFetchHistory(connection, url);
     if (findData === undefined || findData.alive || alive) return 0;
-    return getTime(new Date(), findData.timestamp);
+    return getTime(checkDate, findData.timestamp) + findData.downtime;
 }
 
 export const getTime = (start: Date, end: Date) => {

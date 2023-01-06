@@ -22,7 +22,14 @@ export const RunPing = async (connection: mysql.Connection) => {
         } catch (_err) {
             responseDate = new Date();
         }
-        result.push({ host: host, ip: ip, alive: alive, checkDate: checkDate, responseTime: getTime(checkDate, responseDate), downTime: await getPingDownTime(connection, host, alive) });
+        result.push({
+            host: host,
+            ip: ip,
+            alive: alive,
+            checkDate: checkDate,
+            responseTime: getTime(checkDate, responseDate),
+            downTime: await getPingDownTime(connection, host, alive, checkDate)
+        });
     }
     return result;
 }
@@ -48,7 +55,14 @@ export const RunFetch = async (connection: mysql.Connection) => {
         } finally {
             clearTimeout(fetchTimeout);
         }
-        result.push({ url: url, status: status, alive: alive, checkDate: checkDate, responseTime: getTime(checkDate, responseDate), downTime: await getFetchDownTime(connection, url, alive) });
+        result.push({
+            url: url,
+            status: status,
+            alive: alive,
+            checkDate: checkDate,
+            responseTime: getTime(checkDate, responseDate),
+            downTime: await getFetchDownTime(connection, url, alive, checkDate)
+        });
     }
     return result;
 }
