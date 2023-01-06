@@ -34,7 +34,7 @@ exp.get('/history', async (_req, _res) => {
             if (pingHistory === undefined) continue;
             const pingItem: PING_ITEM = { host: host, data: [] };
             const datas = pingHistory.filter(data => data.host === host);
-            for (let data of datas) pingItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp, responseTime: data.responseTime });
+            for (let data of datas) pingItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp, responseTime: data.responsetime });
             pingData.push(pingItem);
         }
 
@@ -44,7 +44,7 @@ exp.get('/history', async (_req, _res) => {
             if (fetchHistory === undefined) continue;
             const fetchItem: FETCH_ITEM = { url: url, data: [] };
             const datas = fetchHistory.filter(data => data.url === url);
-            for (let data of datas) fetchItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp, responseTime: data.responseTime });
+            for (let data of datas) fetchItem.data.push({ alive: data.alive === 0 ? false : true, timestamp: data.timestamp, responseTime: data.responsetime });
             fetchData.push(fetchItem);
         }
         _res.json({ ping: pingData, fetch: fetchData });
