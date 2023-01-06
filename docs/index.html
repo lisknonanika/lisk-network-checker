@@ -232,10 +232,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: timestamps,
+                    labels: timestamps.reverse(),
                     datasets: [{
                         label: 'response time',
-                        data: responseTimes,
+                        data: responseTimes.reverse(),
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)'
                     }],
@@ -265,10 +265,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: timestamps,
+                    labels: timestamps.reverse(),
                     datasets: [{
                         label: 'response time',
-                        data: responseTimes,
+                        data: responseTimes.reverse(),
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)'
                     }],
