@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lisk Network Checker</title>
+</head>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #fff;
+        background: linear-gradient(to bottom right, rgb(35, 45, 80), 75%, #000);
+        font-size: 0.8rem;
+        height: 100vh;
+        margin: 0px;
+        padding: 75px 15px 100px 15px;
+    }
+
+    header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgb(15, 25, 60);
+        z-index: 1000;
+    }
+
+    a,
+    a:visited {
+        color: rgb(200, 200, 235);
+    }
+
+    a:hover {
+        color: rgb(150, 150, 245);
+    }
+
+    hr {
+        border-top: solid 1px rgba(255, 255, 255, 0.25);
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    .btn {
+        border-radius: 10px;
+        border: 1px solid rgba(85, 85, 200, 0.9);
+        background-color: rgba(50, 50, 145, 0.8);
+        color: azure;
+        padding: 10px 20px;
+    }
+
+    .btn:active {
+        border: 1px solid rgba(50, 50, 145, 0.8);
+        background-color: rgba(85, 85, 200, 0.9);
+    }
+
+    .main-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+
+    .note {
+        font-size: 0.8rem;
+        font-weight: normal;
+    }
+
+    #ping,
+    #fetch {
+        margin-bottom: 10px;
+    }
+
+    .status-row {
+        display: flex;
+    }
+
+    .status-col {
+        padding: 3px 1rem;
+    }
+
+    .status-green {
+        color: rgb(0, 155, 0);
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .status-red {
+        color: rgb(165, 5, 5);
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .status-alert {
+        font-weight: bold;
+        color: rgb(165, 5, 5);
+    }
+</style>
+
+<body>
+    <header>Lisk Network Checker</header>
+    <button type="button" class="btn" onclick="reload();">Reload</button>
+
+    <div id="status">
+        <div class="main-title" style="margin-top: 25px;">Lisk Service API <span class="note">(timeout: 10sec.)</span>
+        </div>
+        <div id="fetch">Loading...</div>
+        <div class="main-title" style="margin-top: 35px;">Host <span class="note">(timeout: 5sec.)</span></div>
+        <div id="ping">Loading...</div>
+    </div>
+
+    <div style="margin-top: 75px;">
+        <a href="https://github.com/lisknonanika/lisk-network-checker" target="_blank"
+            rel="noopener noreferrer">Source</a>
+        &nbsp;/&nbsp;
+        <a href="https://ysdev.work/lisk-network-check" target="_blank" rel="noopener noreferrer">API - check</a>
+        &nbsp;/&nbsp;
+        <a href="https://ysdev.work/lisk-network-history" target="_blank" rel="noopener noreferrer">API - history</a>
+    </div>
+    <script>
+        const getStatus = async () => {
+            const ret = await fetch("https://ysdev.work/lisk-network-check", { mode: 'cors' });
+            const json = await ret.json();
+
+            const pingdom = document.querySelector("#ping");
+            let pingrow = "";
+            for (let ping of json.ping) {
+                pingrow += `
+                    <div class="title">${ping.alive ? "<span class='status-green'>●</span>" : "<span class='status-red'>●</span>"} ${ping.host}</div>
+                    <div class="status-col">ip: ${ping.ip}</div>
+                    <div class="status-col">check: ${changeTimestamp(ping.checkDate)}</div>
+                    <div class="status-col">response: ${ping.responseTime} ms.</div>
+                    <div class="status-col status-alert">${ping.downTime === 0 ? "" : `DOWN! about ${Math.round(ping.downTime / 1000)} sec. ago`}</div>
+                    <hr />
+                `;
+            }
+            pingdom.innerHTML = pingrow;
+
+            const fetchdom = document.querySelector("#fetch");
+            let fetchrow = "";
+            for (let fetch of json.fetch) {
+                fetchrow += `
+                    <div class="title">${fetch.alive ? "<span class='status-green'>●</span>" : "<span class='status-red'>●</span>"} ${fetch.url.replace("https://", "")}</div>
+                    <div class="status-col">status: ${fetch.status}</div>
+                    <div class="status-col">check: ${changeTimestamp(fetch.checkDate)}</div>
+                    <div class="status-col">response: ${fetch.responseTime} ms.</div>
+                    <div class="status-col status-alert">${fetch.downTime === 0 ? "" : `DOWN! about ${Math.round(fetch.downTime / 1000)} sec. ago`}</div>
+                    <hr />
+                `;
+            }
+            fetchdom.innerHTML = fetchrow;
+        };
+
+        const reload = async () => {
+            const pingdom = document.querySelector("#ping");
+            pingdom.innerHTML = "Loading...";
+            const fetchdom = document.querySelector("#fetch");
+            fetchdom.innerHTML = "Loading...";
+            await getStatus();
+        }
+
+        const changeTimestamp = (d) => {
+            const dt = new Date(d);
+            return `${dt.toLocaleDateString()} ${dt.toLocaleTimeString()}`;
+        }
+
+        (async () => {
+            await getStatus();
+        })();
+    </script>
+</body>
+
+</html>
