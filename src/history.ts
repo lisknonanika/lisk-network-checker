@@ -35,8 +35,8 @@ export const getLatestFetchHistory = async (connection: mysql.Connection, url: s
 export const setPingHistory = async (connection: mysql.Connection, pingResults: PING_RESULT[]) => {
     for (let result of pingResults) {
         try {
-            const pingHistory = await getLatestPingHistory(connection, result.host);
-            if (pingHistory && (pingHistory.alive === 0 ? false : true) === result.alive) continue;
+            // const pingHistory = await getLatestPingHistory(connection, result.host);
+            // if (pingHistory && (pingHistory.alive === 0 ? false : true) === result.alive) continue;
             const query: string = "INSERT INTO `pinghistory` SET ?";
             const pingData: PING_HISTORY = { host: result.host, alive: result.alive, timestamp: result.checkDate, responseTime: result.responseTime };
             await connection.query(query, [pingData]);
@@ -50,8 +50,8 @@ export const setPingHistory = async (connection: mysql.Connection, pingResults: 
 export const setFetchHistory = async (connection: mysql.Connection, fetchResult: FETCH_RESULT[]) => {
     for (let result of fetchResult) {
         try {
-            const fetchHistory = await getLatestFetchHistory(connection, result.url);
-            if (fetchHistory && (fetchHistory.alive === 0 ? false : true) === result.alive) continue;
+            // const fetchHistory = await getLatestFetchHistory(connection, result.url);
+            // if (fetchHistory && (fetchHistory.alive === 0 ? false : true) === result.alive) continue;
             const query: string = "INSERT INTO `fetchhistory` SET ?";
             const pingData: FETCH_HISTORY = { url: result.url, alive: result.alive, timestamp: result.checkDate, responseTime: result.responseTime };
             await connection.query(query, [pingData]);
