@@ -75,13 +75,13 @@ export const setFetchHistory = async (connection: mysql.Connection, fetchResult:
 export const getPingDownTime = async (connection: mysql.Connection, host: string, alive: boolean, checkDate: Date): Promise<number> => {
     const findData = await getLatestPingHistory(connection, host);
     if (findData === undefined || findData.alive || alive) return 0;
-    return getTime(checkDate, findData.timestamp) + findData.downtime;
+    return getTime(findData.timestamp, checkDate) + findData.downtime;
 }
 
 export const getFetchDownTime = async (connection: mysql.Connection, url: string, alive: boolean, checkDate: Date): Promise<number> => {
     const findData = await getLatestFetchHistory(connection, url);
     if (findData === undefined || findData.alive || alive) return 0;
-    return getTime(checkDate, findData.timestamp) + findData.downtime;
+    return getTime(findData.timestamp, checkDate) + findData.downtime;
 }
 
 export const getTime = (start: Date, end: Date) => {
