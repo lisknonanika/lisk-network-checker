@@ -289,11 +289,17 @@
         }
 
         const reload = async () => {
-            const pingdom = document.querySelector("#history-ping");
-            pingdom.innerHTML = "Loading...";
-            const fetchdom = document.querySelector("#history-fetch");
-            fetchdom.innerHTML = "Loading...";
-            await getStatus();
+            const pingStatusDom = document.querySelector("#status-ping");
+            pingStatusDom.innerHTML = "Loading...";
+            const fetchStatusDom = document.querySelector("#status-fetch");
+            fetchStatusDom.innerHTML = "Loading...";
+            getStatus();
+
+            const pingHistoryDom = document.querySelector("#history-ping");
+            pingHistoryDom.innerHTML = "Loading...";
+            const fetchHistoryDom = document.querySelector("#history-fetch");
+            fetchHistoryDom.innerHTML = "Loading...";
+            getHistory();
         }
 
         const changeTimestamp = (d) => {
@@ -302,8 +308,8 @@
         }
 
         (async () => {
-            await getStatus();
-            await getHistory();
+            getStatus();
+            getHistory();
         })();
     </script>
 </body>
