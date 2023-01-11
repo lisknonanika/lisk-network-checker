@@ -311,6 +311,15 @@
             getStatus();
             getHistory();
         })();
+        
+        let timeoutId = null;
+        window.addEventListener("orientationchange", () => {
+            if (timeoutId !== null) return;
+            timeoutId = setTimeout(function(){
+                timeoutId = null;
+                getHistory();
+            }, 1000);
+        });
     </script>
 </body>
 
