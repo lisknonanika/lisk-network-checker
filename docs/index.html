@@ -193,7 +193,7 @@
                 const ping = json.ping[i];
                 const pingrow = `
                 <div class="title" style="padding-left: 1rem;">${ping.host}</div>
-                <div class="history-col"><canvas id="ping-chart${i}"></canvas></div>
+                <div class="history-col" style="position:relative;height:250px;"><canvas id="ping-chart${i}"></canvas></div>
                 <hr />
                 `;
                 pingdom.innerHTML += pingrow;
@@ -210,7 +210,7 @@
                 const fetch = json.fetch[i];
                 const fetchrow = `
                 <div class="title" style="padding-left: 1rem;">${fetch.url.replace("https://", "")}</div>
-                <div class="history-col"><canvas id="fetch-chart${i}"></canvas></div>
+                <div class="history-col" style="position:relative;height:250px;"><canvas id="fetch-chart${i}"></canvas></div>
                 <hr />
                 `;
                 fetchdom.innerHTML += fetchrow;
@@ -241,6 +241,8 @@
                     }],
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             title: { display: true, text: 'ms.' },
@@ -274,6 +276,8 @@
                     }],
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             title: { display: true, text: 'ms.' },
@@ -311,15 +315,6 @@
             getStatus();
             getHistory();
         })();
-        
-        let timeoutId = null;
-        window.addEventListener("orientationchange", () => {
-            if (timeoutId !== null) return;
-            timeoutId = setTimeout(function(){
-                timeoutId = null;
-                getHistory();
-            }, 1000);
-        });
     </script>
 </body>
 
