@@ -162,7 +162,7 @@
                 <div class="status-col">ip: ${ping.ip}</div>
                 <div class="status-col">check: ${changeTimestamp(ping.checkDate)}</div>
                 <div class="status-col">response: ${ping.responseTime} ms.</div>
-                <div class="status-col status-alert">${ping.downTime === 0 ? "" : `DOWN! about ${Math.round(ping.downTime / 1000)} sec. ago`}</div>
+                <div class="status-col status-alert">${ping.downTime === 0 ? "" : `Down!(or Very Slow) about ${Math.round(ping.downTime / 1000)} sec. ago`}</div>
                 <hr />
                 `;
                 pingdom.innerHTML += pingrow;
@@ -176,7 +176,7 @@
                 <div class="status-col">status: ${fetch.status}</div>
                 <div class="status-col">check: ${changeTimestamp(fetch.checkDate)}</div>
                 <div class="status-col">response: ${fetch.responseTime} ms.</div>
-                <div class="status-col status-alert">${fetch.downTime === 0 ? "" : `DOWN! about ${Math.round(fetch.downTime / 1000)} sec. ago`}</div>
+                <div class="status-col status-alert">${fetch.downTime === 0 ? "" : `Down!(or Very Slow) about ${Math.round(fetch.downTime / 1000)} sec. ago`}</div>
                 <hr />
                 `;
                 fetchdom.innerHTML += fetchrow;
