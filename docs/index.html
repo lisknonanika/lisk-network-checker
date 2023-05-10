@@ -184,7 +184,7 @@
         };
 
         const getHistory = async () => {
-            const ret = await fetch("https://ysdev.work/lisk-network-history", { mode: 'cors' });
+            const ret = await fetch("https://ysdev.work/lisk-network-history?limit=30", { mode: 'cors' });
             const json = await ret.json();
 
             const pingdom = document.querySelector("#history-ping");
