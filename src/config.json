@@ -16,7 +16,7 @@
     },
     "PING": {
         "option": {
-            "timeout": 3
+            "timeout": 5
         },
         "hosts": [
             "lisk.com",
@@ -25,7 +25,7 @@
         ]
     },
     "FETCH": {
-        "timeout": 5000,
+        "timeout": 10000,
         "url": [
             "https://mainnet-service.lisk.com/api/status",
             "https://mainnet-service.lisk.com/api/v2/blocks?limit=1",
