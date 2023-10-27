@@ -35,6 +35,17 @@ export const getLatestFetchHistory = async (connection: mysql.Connection, url: s
 }
 
 export const setPingHistory = async (connection: mysql.Connection, pingResults: PING_RESULT[]) => {
+    // DELETE
+    try {
+        const query: string = "DELETE FROM `pinghistory` WHERE `timestamp` < DATE_SUB(NOW(), INTERVAL 7 DAY)";
+        await connection.query(query);
+        await connection.commit();
+    } catch (_err) {
+        console.log("[setPingHistory] DELETE FAILED");
+        await connection.rollback();
+    }
+
+    // INSERT
     for (let result of pingResults) {
         try {
             const query: string = "INSERT INTO `pinghistory` SET ?";
@@ -48,12 +59,24 @@ export const setPingHistory = async (connection: mysql.Connection, pingResults: 
             await connection.query(query, [pingData]);
             await connection.commit();
         } catch (_err) {
+            console.log(`[setPingHistory] INSERT FAILED(${result.host})`);
             await connection.rollback();
         }
     }
 }
 
 export const setFetchHistory = async (connection: mysql.Connection, fetchResult: FETCH_RESULT[]) => {
+    // DELETE
+    try {
+        const query: string = "DELETE FROM `fetchhistory` WHERE `timestamp` < DATE_SUB(NOW(), INTERVAL 7 DAY)";
+        await connection.query(query);
+        await connection.commit();
+    } catch (_err) {
+        console.log("[setFetchHistory] DELETE FAILED");
+        await connection.rollback();
+    }
+
+    // INSERT
     for (let result of fetchResult) {
         try {
             const query: string = "INSERT INTO `fetchhistory` SET ?";
@@ -67,6 +90,7 @@ export const setFetchHistory = async (connection: mysql.Connection, fetchResult:
             await connection.query(query, [pingData]);
             await connection.commit();
         } catch (_err) {
+            console.log(`[setFetchHistory] INSERT FAILED(${result.url})`);
             await connection.rollback();
         }
     }
