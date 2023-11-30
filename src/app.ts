@@ -27,7 +27,7 @@ export const RunPing = async (connection: mysql.Connection) => {
             ip: ip,
             alive: alive,
             checkDate: checkDate,
-            responseTime: alive? getTime(checkDate, responseDate) : (PING_CONFIG.option.timeout  + 0.1) * 1000,
+            responseTime: alive? getTime(checkDate, responseDate) : (PING_CONFIG.option.timeout  + 0.001) * 1000,
             downTime: await getPingDownTime(connection, host, alive, checkDate)
         });
     }
@@ -60,7 +60,7 @@ export const RunFetch = async (connection: mysql.Connection) => {
             status: status,
             alive: alive,
             checkDate: checkDate,
-            responseTime: alive? getTime(checkDate, responseDate) : ((FETCH_CONFIG.timeout / 1000) + 0.1) * 1000,
+            responseTime: alive? getTime(checkDate, responseDate) : ((FETCH_CONFIG.timeout / 1000) + 0.001) * 1000,
             downTime: await getFetchDownTime(connection, url, alive, checkDate)
         });
     }
