@@ -49,7 +49,7 @@ export const RunFetch = async (connection: mysql.Connection) => {
             const response = await fetch(url, { signal: controller.signal });
             responseDate = new Date();
             status = response.status.toString();
-            alive = response.ok;
+            alive = (status === "200");
         } catch (_err) {
             responseDate = new Date();
         } finally {
