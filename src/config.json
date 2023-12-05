@@ -28,7 +28,7 @@
         "timeout": 10000,
         "url": [
             "https://mainnet-service.lisk.com/api/status",
-            "https://mainnet-service.lisk.com/api/v2/blocks?limit=1",
+            "https://mainnet-service.lisk.com/api/v3/blocks?limit=1",
             "https://testnet-service.lisk.com/api/status",
             "https://testnet-service.lisk.com/api/v3/blocks?limit=1"
         ]
