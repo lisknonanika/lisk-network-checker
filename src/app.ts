@@ -46,7 +46,17 @@ export const RunFetch = async (connection: mysql.Connection) => {
         let responseDate: Date = checkDate;
 
         try {
-            const response = await fetch(url, { signal: controller.signal });
+            let response = null;
+            if (url.indexOf("sepolia") >= 0) {
+                response = await fetch(url, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 0}),
+                    signal: controller.signal
+                });
+            } else {
+                response = await fetch(url, { signal: controller.signal });
+            }
             responseDate = new Date();
             status = response.status.toString();
             alive = (status === "200");
