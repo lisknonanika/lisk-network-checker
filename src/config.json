@@ -8,9 +8,9 @@
     "DB": {
         "params": {
             "host": "localhost",
-            "user": "root",
-            "password": "password",
-            "database": "lnc"
+            "user": "",
+            "password": "",
+            "database": ""
         },
         "limit": 10
     },
@@ -19,18 +19,13 @@
             "timeout": 5
         },
         "hosts": [
-            "lisk.com",
-            "mainnet-service.lisk.com",
-            "rpc.api.lisk.com",
-            "rpc.sepolia-api.lisk.com"
+            ""
         ]
     },
     "FETCH": {
         "timeout": 10000,
         "url": [
-            "https://mainnet-service.lisk.com/api/v3/blocks?limit=1",
-            "https://rpc.api.lisk.com",
-            "https://rpc.sepolia-api.lisk.com"
+            ""
         ]
     }
 }
