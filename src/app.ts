@@ -47,7 +47,7 @@ export const RunFetch = async (connection: mysql.Connection) => {
 
         try {
             let response = null;
-            if (url.indexOf("sepolia") >= 0) {
+            if (url.indexOf("rpc") >= 0) {
                 response = await fetch(url, {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
